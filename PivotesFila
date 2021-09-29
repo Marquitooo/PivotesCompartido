@@ -1,0 +1,110 @@
+"""
+Pivoteo por filas
+
+Hecho por José Pablo Muñoz Guerrero
+"""
+
+#import numpy as np
+
+umbral=0.0001
+itmax=1000
+
+def read_inputs(text_basis):
+    a_temp,b_temp=text_basis.strip().split("=")
+    b_temp=eval(b_temp.strip(" "))
+    a_temp=a_temp[:-1]
+    a_temp=[eval(i) for i in a_temp.split()]
+    return a_temp, b_temp
+
+def read_file(path):
+    A=[]
+    b=[]
+    with open(path, "r") as f:
+        flag=0
+        for line in f:
+            if line.strip() != "X":
+                pass
+            else:
+                flag=1
+                continue
+            if line == "Y":
+                break
+            if flag==1:
+                aux1,aux2=read_inputs(line)
+                A.append(aux1)
+                b.append(aux2)
+    return A,b
+
+
+A,b=read_file("C:/Users/Tayos_000/Documents/UAQ/Tareas/Tercer semestre/Métodos Numéricos/Lecturas/PivoteFila.txt")
+
+print("Matriz A:",A)
+print("Matriz b:",b)
+
+def pivoteo_fila(A,b):
+    
+    n=len(A[0])
+    
+    #k va a ir contando la iteración general
+    for k in range(n-1):
+        s_max=0
+        #Recorre filas
+        for i in range(k,n):
+            max_temp=abs(A[i][0])
+            #Recorre columnas
+            for j in range(k,n):
+                if (A[i][j]>max_temp):
+                    #Pesca el máximo de cada fila
+                    max_temp=A[i][j]
+            s_temp=A[i][k]/max_temp
+            #print("s=",s_temp)
+            if (s_temp>s_max):
+                 s_max=s_temp
+                 fila=i
+        #print("La fila de hasta arriba va a ser:",fila+1)
+        aux=A[k]
+        A[k]=A[fila]
+        A[fila]=aux
+        
+        aux=b[k]
+        b[k]=b[fila]
+        b[fila]=aux
+        #print(k+1, A,"\n")
+    return A,b
+    
+A,b=pivoteo_fila(A,b)
+
+print("\nMatriz A ordenada:",A)
+print("Matriz b ordenada:",b)
+
+
+f=open("Gauss-Seidel (Lista)3.tex", "+w")
+
+def lista(A, b):
+    n=len(b)
+    aux=[1 for i in range(n)]
+    x=[0 for i in range(n)]
+    for it in range(itmax):
+        for k in range(n):
+            #aux ayuda a no contar el k
+            aux[k]=0
+            x[k] = (b[k]-sum([i*j*k for i,j,k in zip(aux,x,A[k])]))/A[k][k]
+            aux[k]=1
+            
+        current_b=[b[h]-sum([i*j for i,j in zip(x,A[h])]) for h in range(n)]
+        error=sum([abs(i) for i in current_b])
+        if(error<umbral):
+            break
+    return x
+X=lista(A,b)
+
+
+print("\nCon el algoritmo de listas se ha llegado a este resultado:",X)
+f.write("Con el algoritmo de listas se ha llegado a este resultado:")
+for i in range(len(X)):   
+    f.write("\n")
+    f.write("x")
+    f.write("{:1d}".format(i))
+    f.write("=")
+    f.write("{:10f}".format(X[i]))
+f.close

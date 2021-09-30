@@ -48,10 +48,11 @@ def pivoteo_fila(A,b):
     
     #k va a ir contando la iteración general
     for k in range(n-1):
+        m=0
         s_max=0
         #Recorre filas
         for i in range(k,n):
-            max_temp=abs(A[i][0])
+            max_temp=abs(A[i][m])
             #Recorre columnas
             for j in range(k,n):
                 if (A[i][j]>max_temp):
@@ -70,6 +71,8 @@ def pivoteo_fila(A,b):
         aux=b[k]
         b[k]=b[fila]
         b[fila]=aux
+        
+        m=m+1
         #print(k+1, A,"\n")
     return A,b
     

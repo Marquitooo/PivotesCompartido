@@ -58,7 +58,7 @@ def pivoteo_fila(A,b):
                 if (A[i][j]>max_temp):
                     #Pesca el máximo de cada fila
                     max_temp=A[i][j]
-            s_temp=A[i][k]/max_temp
+            s_temp=abs(A[i][k]/max_temp)
             #print("s=",s_temp)
             if (s_temp>s_max):
                  s_max=s_temp

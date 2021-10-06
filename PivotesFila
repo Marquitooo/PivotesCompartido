@@ -2,13 +2,17 @@
 Pivoteo por filas
 
 Hecho por José Pablo Muñoz Guerrero
-Marco Ramirez Lopez
+Marco Ramirez Lopez 
 """
 
 #import numpy as np
 
 umbral=0.0001
 itmax=1000
+
+def printm(A):
+    for i in range(len(A)):
+        print(A[i])
 
 def read_inputs(text_basis):
     a_temp,b_temp=text_basis.strip().split("=")
@@ -37,52 +41,6 @@ def read_file(path):
     return A,b
 
 
-A,b=read_file("C:/Users/Tayos_000/Documents/UAQ/Tareas/Tercer semestre/Métodos Numéricos/Lecturas/PivoteFila.txt")
-
-print("Matriz A:",A)
-print("Matriz b:",b)
-
-def pivoteo_fila(A,b):
-    
-    n=len(A[0])
-    
-    #k va a ir contando la iteración general
-    for k in range(n-1):
-        m=0
-        s_max=0
-        #Recorre filas
-        for i in range(k,n):
-            max_temp=abs(A[i][m])
-            #Recorre columnas
-            for j in range(k,n):
-                if (A[i][j]>max_temp):
-                    #Pesca el máximo de cada fila
-                    max_temp=A[i][j]
-            s_temp=abs(A[i][k]/max_temp)
-            #print("s=",s_temp)
-            if (s_temp>s_max):
-                 s_max=s_temp
-                 fila=i
-        #print("La fila de hasta arriba va a ser:",fila+1)
-        aux=A[k]
-        A[k]=A[fila]
-        A[fila]=aux
-        
-        aux=b[k]
-        b[k]=b[fila]
-        b[fila]=aux
-        
-        m=m+1
-        #print(k+1, A,"\n")
-    return A,b
-    
-A,b=pivoteo_fila(A,b)
-
-print("\nMatriz A ordenada:",A)
-print("Matriz b ordenada:",b)
-
-
-f=open("Gauss-Seidel (Lista)3.tex", "+w")
 
 def lista(A, b):
     n=len(b)
@@ -100,8 +58,100 @@ def lista(A, b):
         if(error<umbral):
             break
     return x
-X=lista(A,b)
 
+###### Fila ######
+
+def pivoteo_fila(A,b):
+    
+    n=len(A[0])
+    
+    #k va a ir contando la iteración general
+    for k in range(n-1):
+        s_max=0
+        #Recorre filas
+        for i in range(k,n):
+            max_temp=abs(A[i][k])
+            #Recorre columnas
+            for j in range(k,n):
+                if (abs(A[i][j])>max_temp):
+                    #Pesca el máximo de cada fila
+                    max_temp=abs(A[i][j])
+            s_temp=abs(A[i][k])/max_temp
+            #print(A[i][k],"/",max_temp,"s=",s_temp)
+            if (s_temp>s_max):
+                 s_max=s_temp
+                 #print("Max:", s_max)
+                 fila=i
+        #print("La fila de hasta arriba va a ser:",fila+1)
+        aux=A[k]
+        A[k]=A[fila]
+        A[fila]=aux
+        
+        aux=b[k]
+        b[k]=b[fila]
+        b[fila]=aux
+        #print(k+1, A,"\n")
+    return A,b
+
+###### Columna ######
+
+def pivoteo_col(A,b):
+    
+    n=len(A[0])
+    aux=[0 for w in range (n)]
+    #k va a ir contando la iteración general
+    for k in range(n-1):
+        s_max=0
+        #Recorre filas
+        for i in range(k,n):
+            max_temp=abs(A[k][i])
+            #Recorre columnas
+            for j in range(k,n):
+                if (abs(A[j][i])>max_temp):
+                    #Pesca el máximo de cada fila
+                    max_temp=abs(A[j][i])
+            s_temp=abs(A[k][i])/max_temp
+            #print(A[i][k],"/",max_temp,"s=",s_temp)
+            if (s_temp>s_max):
+                 s_max=s_temp
+                 #print("Max:", s_max)
+                 col =i
+        #print("La fila de hasta arriba va a ser:",fila+1)
+        for m in range (n):
+            aux[m]=A[m][k]
+            A[m][k]=A[m][col]
+            A[m][col]=aux[m]
+        
+        b
+    return A,b
+
+A,b=read_file("Gauss archivo con los datos.txt")
+A,b_1=read_file("Gauss archivo con los datos.txt")
+
+print("Matriz A:")
+printm(A)
+print("Matriz b:")
+printm(b)
+
+
+A,b=pivoteo_fila(A,b)
+
+print("\nMatriz A ordenada por fila:")
+printm(A)
+print("Matriz b ordenada por fila:")
+printm(b)
+
+A,b=pivoteo_col(A,b)
+
+print("\nMatriz A ordenada por columna:")
+printm(A)
+print("Matriz b ordenada por columna:")
+printm(b_1)
+
+
+f=open("Gauss-Seidel (Lista)3.tex", "+w")
+
+X=lista(A,b)
 
 print("\nCon el algoritmo de listas se ha llegado a este resultado:",X)
 f.write("Con el algoritmo de listas se ha llegado a este resultado:")

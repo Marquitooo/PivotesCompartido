@@ -9,6 +9,10 @@ Hecho por José Pablo Muñoz Guerrero
 umbral=0.0001
 itmax=1000
 
+def printm(A):
+    for i in range(len(A)):
+        print(A[i])
+
 def read_inputs(text_basis):
     a_temp,b_temp=text_basis.strip().split("=")
     b_temp=eval(b_temp.strip(" "))
@@ -35,51 +39,6 @@ def read_file(path):
                 b.append(aux2)
     return A,b
 
-
-A,b=read_file("C:/Users/Tayos_000/Documents/UAQ/Tareas/Tercer semestre/Métodos Numéricos/Lecturas/PivoteFila.txt")
-
-print("Matriz A:",A)
-print("Matriz b:",b)
-
-def pivoteo_fila(A,b):
-    
-    n=len(A[0])
-    
-    #k va a ir contando la iteración general
-    for k in range(n-1):
-        s_max=0
-        #Recorre filas
-        for i in range(k,n):
-            max_temp=abs(A[i][0])
-            #Recorre columnas
-            for j in range(k,n):
-                if (A[i][j]>max_temp):
-                    #Pesca el máximo de cada fila
-                    max_temp=A[i][j]
-            s_temp=A[i][k]/max_temp
-            #print("s=",s_temp)
-            if (s_temp>s_max):
-                 s_max=s_temp
-                 fila=i
-        #print("La fila de hasta arriba va a ser:",fila+1)
-        aux=A[k]
-        A[k]=A[fila]
-        A[fila]=aux
-        
-        aux=b[k]
-        b[k]=b[fila]
-        b[fila]=aux
-        #print(k+1, A,"\n")
-    return A,b
-    
-A,b=pivoteo_fila(A,b)
-
-print("\nMatriz A ordenada:",A)
-print("Matriz b ordenada:",b)
-
-
-f=open("Gauss-Seidel (Lista)3.tex", "+w")
-
 def lista(A, b):
     n=len(b)
     aux=[1 for i in range(n)]
@@ -96,8 +55,58 @@ def lista(A, b):
         if(error<umbral):
             break
     return x
-X=lista(A,b)
 
+def pivoteo_fila(A,b):
+    
+    n=len(A[0])
+    
+    #k va a ir contando la iteración general
+    for k in range(n-1):
+        s_max=0
+        #Recorre filas
+        for i in range(k,n):
+            max_temp=abs(A[i][k])
+            #Recorre columnas
+            for j in range(k,n):
+                if (abs(A[i][j])>max_temp):
+                    #Pesca el máximo de cada fila
+                    max_temp=abs(A[i][j])
+            s_temp=abs(A[i][k])/max_temp
+            #print(A[i][k],"/",max_temp,"s=",s_temp)
+            if (s_temp>s_max):
+                 s_max=s_temp
+                 #print("Max:", s_max)
+                 fila=i
+        #print("La fila de hasta arriba va a ser:",fila+1)
+        aux=A[k]
+        A[k]=A[fila]
+        A[fila]=aux
+        
+        aux=b[k]
+        b[k]=b[fila]
+        b[fila]=aux
+        #print(k+1, A,"\n")
+    return A,b
+
+A,b=read_file("C:/Users/Tayos_000/Documents/UAQ/Tareas/Tercer semestre/Métodos Numéricos/Lecturas/PivoteFila.txt")
+
+print("Matriz A:")
+printm(A)
+print("Matriz b:")
+printm(b)
+
+
+A,b=pivoteo_fila(A,b)
+
+print("\nMatriz A ordenada:")
+printm(A)
+print("Matriz b ordenada:")
+printm(b)
+
+
+f=open("Gauss-Seidel (Lista)3.tex", "+w")
+
+X=lista(A,b)
 
 print("\nCon el algoritmo de listas se ha llegado a este resultado:",X)
 f.write("Con el algoritmo de listas se ha llegado a este resultado:")
